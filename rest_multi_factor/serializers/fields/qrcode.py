@@ -28,7 +28,7 @@ class QRURIField(Field):
         Initialize the class.
 
         :param kwargs: The keyword arguments to pass on
-        :type kwargs: dict
+        :type kwargs: any
         """
         Field.__init__(self, **kwargs, read_only=True)
 
@@ -48,7 +48,6 @@ class QRURIField(Field):
         matrix.get_image().save(buffer, "PNG")
 
         buffer.seek(0)
-        buffer.close()
 
         return base64.b64encode(buffer.read())
 

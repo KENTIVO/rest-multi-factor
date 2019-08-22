@@ -8,4 +8,5 @@ try:
     from rest_multi_factor.serializers.fields.qrcode import QRURIField
 
 except ImportError:
-    from rest_framework.serializers import CharField as QRURIField
+    from rest_multi_factor.serializers.fields.compat import QRURIField
+
