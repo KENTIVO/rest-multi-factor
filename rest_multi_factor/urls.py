@@ -1,6 +1,4 @@
-"""
-
-"""
+"""Default route structure."""
 
 
 __all__ = (
@@ -8,6 +6,7 @@ __all__ = (
 )
 
 from django.conf.urls import url, include
+
 
 from rest_multi_factor.routers import MultiFactorVerifierRouter, MultiFactorRegisterRouter
 from rest_multi_factor.viewsets import MultiFactorRegistrationViewSet, MultiFactorVerifierViewSet

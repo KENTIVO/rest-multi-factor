@@ -22,6 +22,7 @@ class MultiFactorVerifierRouter(SimpleRouter):
 
     see: https://www.django-rest-framework.org/api-guide/routers/#custom-routers
     """
+
     routes = [
         # General routes
         Route(

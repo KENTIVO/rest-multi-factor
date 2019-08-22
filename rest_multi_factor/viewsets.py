@@ -1,6 +1,4 @@
-"""
-Views for handling two factor authentication.
-"""
+"""Views for handling two factor authentication."""
 
 __all__ = (
     "MultiFactorVerifierViewSet",
@@ -14,17 +12,16 @@ from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
-from rest_framework.parsers import JSONParser
-from rest_framework.renderers import JSONRenderer
 from rest_framework.exceptions import NotFound
 from rest_framework.decorators import throttle_classes
+
 
 from rest_multi_factor.mixins import DeviceMixin
 from rest_multi_factor.registry import registry
 from rest_multi_factor.settings import multi_factor_settings
 from rest_multi_factor.throttling import AbstractDelayingThrottle
 from rest_multi_factor.serializers import DeviceSerializer, ValueSerializer
-from rest_multi_factor.permissions import IsTokenAuthenticated
+from rest_multi_factor.permissions import IsTokenAuthenticated, IsVerified
 
 
 class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
@@ -34,20 +31,22 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
     This viewset defines APIs that allow for user specific actions
     such as validating a user's device or dispatching one.
     """
+
     field = "value"
 
     lookup_field = "index"
     lookup_value_regex = r"\d+"
 
     backend_class = multi_factor_settings.DEFAULT_BACKEND_CLASS
-    parser_classes = (JSONParser,)
-    renderer_classes = (JSONRenderer,)
+
     serializer_class = ValueSerializer
     permission_classes = (IsTokenAuthenticated,)
 
     def overview(self, request):
         """
-        Retrieve a overview of all available devices for
+        Serve a overview.
+
+        Serves a overview of all available devices for
         the current user and if they are already confirmed.
 
         The index of the returned array will be the id to use,
@@ -64,6 +63,18 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
         return Response(data=DeviceSerializer(devices, many=True).data)
 
     def retrieve(self, request, **kwargs):
+        """
+        Serve a more detailed description of a device.
+
+        :param request: The current request instance
+        :type request: rest_framework.requests.Request
+
+        :param kwargs: Additional keyword arguments
+        :type kwargs: int
+
+        :return: A response for the request
+        :rtype: rest_framework.response.Response
+        """
         device = self.get_user_device(request.user, **kwargs)
         prepared = self.prepare_specific(request, device, **kwargs)
 
@@ -71,6 +82,18 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
 
     @throttle_classes(multi_factor_settings.VERIFICATION_THROTTLING_CLASSES)
     def verify(self, request, **kwargs):
+        """
+        Verify a token with the submitted value.
+
+        :param request: The current request instance
+        :type request: rest_framework.requests.Request
+
+        :param kwargs: Additional keyword arguments
+        :type kwargs: int
+
+        :return: A response for the request
+        :rtype: rest_framework.response.Response
+        """
         val = self.get_value(request)
         dev = self.get_user_device(request.user, **kwargs)
 
@@ -103,6 +126,18 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
         return Response({"verifications-left": counted}, status=200)
 
     def dispatch_challenge(self, request, **kwargs):
+        """
+        Dispatch a challenge for validating.
+
+        :param request: The current request instance
+        :type request: rest_framework.request.Request
+
+        :param kwargs: The additional keyword arguments
+        :type kwargs: int
+
+        :return: The response for this request
+        :rtype: rest_framework.response.Response
+        """
         device = self.get_user_device(request.user, **kwargs)
         if not device.dispatchable:
             raise NotFound("The requested device could not dispatch.")
@@ -120,8 +155,7 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
 
     def get_value(self, request):
         """
-        Extract's the value that needs to be verified
-        from a request.
+        Extract the value that needs to be verified from a request.
 
         :param request: The current request instance
         :type request: rest_framework.request.Request
@@ -167,14 +201,16 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
 
     def get_serializer(self, *args, **kwargs):
         """
-        Return the serializer instance that should be used for
+        Instantiate  the serializer for the current device.
+
+        Returns the serializer instance that should be used for
         validating the integrity of the payload.
 
         :param args: The additional arguments for the serializer
-        :type args: tuple
+        :type args: any
 
         :param args: The additional keyword arguments for the serializer
-        :type args: dict
+        :type args: any
 
         :return: The serializer instance to use for verification
         :rtype: rest_framework.serializers.Serializer
@@ -187,7 +223,6 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
     def get_serializer_class(self):
         """
         Return the class to use for the serializer.
-        Defaults to using `self.serializer_class`.
 
         You may want to override this if you need to provide different
         serializations depending on the incoming request.
@@ -225,7 +260,7 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
 
     def get_throttles(self):
         """
-        Instantiates and returns the list of throttles that this view uses.
+        Instantiate and returns the list of throttles that this view uses.
 
         Overridden so action specific throttle classes are also added.
 
@@ -236,8 +271,7 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
 
     def get_throttle_classes(self):
         """
-        Retrieve the throttle classes of the whole viewset
-        and the current action.
+        Get all throttle classes for the action.
 
         :return: The throttle classes
         :rtype: itertools.chain
@@ -249,18 +283,28 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
 
 
 class MultiFactorRegistrationViewSet(DeviceMixin, ViewSet):
+    """Viewset for registering new devices for a user."""
+
     device = None
+
     lookup_field = "index"
     lookup_value_regex = r"\d+"
-    permission_classes = (IsTokenAuthenticated,)
-    parser_classes = (JSONParser,)
-    renderer_classes = (JSONRenderer,)
+
+    permission_classes = (IsVerified,)
 
     def register(self, request, **kwargs):
         """
+        Register a device for a user.
 
-        :param request:
-        :return:
+        This view allows a user to register a device for himself.
+        As a response will the new device be serialized by the
+        related serializer from the register.
+
+        :param request: The current request instance
+        :type request: rest_framework.request.Request
+
+        :return: A response with the serialized device
+        :rtype: rest_framework.response.Response
         """
         self.device = self.get_device(**kwargs)
 
@@ -277,22 +321,65 @@ class MultiFactorRegistrationViewSet(DeviceMixin, ViewSet):
 
     def overview(self, request, **kwargs):
         """
+        Serve a overview of all devices that can be registered.
 
-        :param request:
-        :param kwargs:
-        :return:
+        :param request: The current request instance
+        :type request: rest_framework.request.Request
+
+        :param kwargs: The additional keyword arguments
+        :type kwargs: int
+
+        :return: The current response
+        :rtype: rest_framework.response.Response
         """
         devices = self.get_prepared_devices()
-        return Response(data=DeviceSerializer(devices, many=True).data)
+        content = DeviceSerializer(devices, many=True).data
+
+        return Response(data=content)
 
     def get_serializer(self, *args, **kwargs):
+        """
+        Instantiate the serializer.
+
+        :param args: Additional arguments to pass on
+        :type args: any
+
+        :param kwargs: Additional keywords arguments to pass on
+        :type kwargs: any
+
+        :return: The instance of the serializer to use
+        :rtype: rest_framework.serializers.Serializer
+        """
         serializer_class = self.get_serializer_class()
         return serializer_class(*args, **kwargs)
 
     def get_serializer_class(self):
+        """
+        Retrieve the serializer class for the current device.
+
+        :return: The class to use for this device.
+        :rtype: type of rest_framework.serializers.Serializer
+        """
         return registry[self.device]
 
-    def options(self, request, *args, **kwargs):
+    def options(self, request, **kwargs):
+        """
+        Serve a options request with metadata.
+
+        Overridden to set the device for the serializer
+        as a instance attribute.
+
+        :param request: The current request instance
+        :type request: rest_framework.requests.Request
+
+
+        :param kwargs: Additional keyword arguments
+        :type kwargs: int
+
+        :return: A response for the request
+        :rtype: rest_framework.response.Response
+        """
         if "index" in kwargs.keys():
             self.device = self.get_device(**kwargs)
-        return super().options(request, *args, **kwargs)
+
+        return super().options(request, **kwargs)

@@ -27,8 +27,7 @@ class IsTokenAuthenticated(BasePermission):
 
     def has_permission(self, request, view):
         """
-        Return `True` if user is authenticated and authentication
-        context is found, `False` otherwise.
+        Tell whether or not the user has a API token.
 
         :param request: The current request instance
         :type request: rest_framework.request.Request
@@ -53,8 +52,7 @@ class IsVerified(IsTokenAuthenticated):
 
     def has_permission(self, request, view):
         """
-        Return `True` if user is authenticated and authentication
-        context is found, `False` otherwise.
+        Tell whether or not the user has a verified API token.
 
         :param request: The current request instance
         :type request: rest_framework.request.Request
@@ -72,7 +70,7 @@ class IsVerified(IsTokenAuthenticated):
 
     def get_backend(self):
         """
-        Instantiates the backend class and returns it.
+        Instantiate the backend class and returns it.
 
         :return: The backend class to use
         :rtype: rest_multi_factor.backends.AbstractVerificationBackend
@@ -96,7 +94,7 @@ class IsVerifiedOrNoDevice(IsVerified):
 
     def has_permission(self, request, view):
         """
-        Tells whether or not the user has permission.
+        Tell whether or not the user has permission.
 
         :param request: The current request instance
         :type request: rest_framework.request.Request

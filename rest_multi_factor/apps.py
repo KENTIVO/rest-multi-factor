@@ -12,5 +12,6 @@ class RestMultiFactorConfig(AppConfig):
     name = 'rest_multi_factor'
 
     def ready(self):
+        """Initialize the registry when all models are loaded."""
         if not registry.initialized:
             registry.initialize()

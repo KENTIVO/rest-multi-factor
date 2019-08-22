@@ -1,16 +1,4 @@
-"""
-Utilities for multi-factor authentication.
-"""
-
-from django import VERSION
-from django.apps import apps
-from django.contrib.auth import get_user_model
-from django.db.models.query import EmptyQuerySet, Q
-
-from django.core.exceptions import ImproperlyConfigured
-
-from rest_multi_factor.settings import multi_factor_settings
-
+"""Utilities for multi-factor authentication."""
 
 __all__ = (
     "unify_queryset",
@@ -19,14 +7,26 @@ __all__ = (
     "get_subclassed_models",
 )
 
+from django import VERSION
+from django.apps import apps
+from django.contrib.auth import get_user_model
+from django.db.models.query import EmptyQuerySet, Q
+
+from django.core.exceptions import ImproperlyConfigured
+
+
+from rest_multi_factor.settings import multi_factor_settings
+
 
 def get_token_model():
     """
     Helper function to retrieve the token model that should be used.
-    It has the same signature as `django.contrib.auth.get_user_model`.
 
-    :raises ImproperlyConfigured: If the format of the 'AUTH_TOKEN_MODEL' setting
-                                  is incorrect or if it could not been found.
+    This method has the same signature as
+    `django.contrib.auth.get_user_model`.
+
+    :raises ImproperlyConfigured: If the format of the 'AUTH_TOKEN_MODEL'
+    setting is incorrect or if it could not been found.
     """
     try:
         return apps.get_model(multi_factor_settings.AUTH_TOKEN_MODEL, require_ready=False)
@@ -43,6 +43,7 @@ def get_token_model():
 def get_subclassed_models(base):
     """
     Get all models that are subclassed from a base model.
+
     This can be useful for models that inherit from a
     abstract base model that defines fields that need to
     be compared at all together.
@@ -50,7 +51,8 @@ def get_subclassed_models(base):
     :param base: The base model
     :type base: type of django.db.models.base.Model
 
-    :return: tuple
+    :return: All subclasses models
+    :rtype: tuple
     """
     models = apps.get_models()
 
@@ -72,9 +74,11 @@ def get_model_fields(model):
 
 def unify_queryset(base, fields=None, filter=None, queryset=None):
     """
-    Unify sub models of another model by using SQL's UNION
-    operator. This function combines the process of filtering
-    selecting and unifying field
+    Unify sub models of another model.
+
+    This function combines the process of filtering
+    selecting and unifying field by using SQL's UNION operator
+    and filtering before joining.
 
     :param base: The base class to use
     :type base: type of django.db.models.base.Model

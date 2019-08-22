@@ -1,4 +1,6 @@
 """
+Custom defined throttle classes.
+
 Here are two throttling classes defined that should provide protection
 against brute-force attacks. This is critical because truncated OTPs
 like TOTP tokens are easy to brute force.
@@ -15,20 +17,18 @@ import abc
 import time
 import urllib.parse
 
+
 from django.core.cache import cache as default_cache
 from django.core.exceptions import ImproperlyConfigured
 
 from rest_framework.throttling import BaseThrottle
 
+
 from rest_multi_factor.settings import multi_factor_settings
 
 
 class AbstractDelayingThrottle(BaseThrottle, metaclass=abc.ABCMeta):
-    """
-    Mixin class that defines some default methods
-    for all Throttle classes that could be used
-    with the verification view.
-    """
+    """Mixin class for brute-force protecting throttles."""
 
     @property
     @abc.abstractmethod
@@ -44,7 +44,7 @@ class AbstractDelayingThrottle(BaseThrottle, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def cache(self):
         """
-        The cache backend to use
+        The cache backend to use.
 
         :return: the cache backend
         :rtype: django.core.cache.backends.base.BaseCache
@@ -53,8 +53,7 @@ class AbstractDelayingThrottle(BaseThrottle, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def allow_request(self, request, view):
         """
-        Return's whether or not the current request
-        should be allowed or not.
+        Tell whether the current request should be allowed or not.
 
         :param request: The current request instance
         :type request: rest_framework.request.Request
@@ -69,7 +68,9 @@ class AbstractDelayingThrottle(BaseThrottle, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def wait(self):
         """
-        Checks Whether there should be a timeout or not
+        Get the wait period in seconds.
+
+        Checks whether there should be a timeout or not
         before the next request, and how long in seconds.
 
         :return: The time to wait until the next request
@@ -78,10 +79,13 @@ class AbstractDelayingThrottle(BaseThrottle, metaclass=abc.ABCMeta):
 
     def parse_timeout(self, value):
         """
-        Parse a timeout specification. This is a string that begins
-        with a value and ends with a timespan. The timespan must be
-        either s (seconds), m (minutes), h (hours), d (days). the
-        value must be a positive decimal.
+        Parse a timeout specification.
+
+        This is a string that begins with a value and ends
+        with a timespan.
+
+        The timespan must be either s (seconds), m (minutes),
+        h (hours), d (days). the value must be a positive decimal.
 
         :return: The timeout in seconds.
         :rtype: int
@@ -118,8 +122,7 @@ class AbstractDelayingThrottle(BaseThrottle, metaclass=abc.ABCMeta):
 
     def get_timeout(self):
         """
-        Retrieve the time in seconds to use as
-        timeout.
+        Retrieve the time in seconds to use as timeout.
 
         :return: The timout in seconds
         :rtype: int
@@ -159,8 +162,12 @@ class AbstractDelayingThrottle(BaseThrottle, metaclass=abc.ABCMeta):
 
 class SimpleDelayingThrottle(AbstractDelayingThrottle):
     """
-    Simple Delaying Throttle, this will
+    Simple Delaying Throttle.
+
+    This will force a timeout after a maximum number of
+    allowed requests.
     """
+
     scope = "auth"
     timer = time.time
     cache = default_cache
@@ -202,8 +209,7 @@ class SimpleDelayingThrottle(AbstractDelayingThrottle):
 
     def wait(self):
         """
-        Calculate the number of seconds to wait
-        until the next request.
+        Calculate the number of seconds to wait until the next request.
 
         :return: The number of seconds to wait
         :rtype: None | int
@@ -227,15 +233,16 @@ class SimpleDelayingThrottle(AbstractDelayingThrottle):
 
 class RecursiveDelayingThrottle(AbstractDelayingThrottle):
     """
-    Recursive Delaying Throttle, will add a required timeout between
-    every request. This timeout will 'grow' after every request.
+    Recursive Delaying Throttle.
+
+    Will add a required timeout between every request.
+    This timeout will 'grow' after every request.
 
     The timeout will be calculated as <number of requests> multiplied
     by <specified time in settings>. and will have a roof that is
     specified by the maximum tryouts in the settings/
-
-    :type cache: django.core.cache.backends.base.BaseCache
     """
+
     scope = 'delayed'
     cache = default_cache
     timer = time.time
@@ -246,6 +253,7 @@ class RecursiveDelayingThrottle(AbstractDelayingThrottle):
     def allow_request(self, request, view):
         """
         Check whether the request is allowed or not.
+
         The timeout between the requests is the timeout
         setting multiplied by the number of requests.
 
@@ -273,8 +281,7 @@ class RecursiveDelayingThrottle(AbstractDelayingThrottle):
 
     def wait(self):
         """
-        Calculate the number of seconds to wait
-        until the next request.
+        Calculate the number of seconds to wait until the next request.
 
         :return: The number of seconds to wait
         :rtype: int
@@ -286,8 +293,10 @@ class RecursiveDelayingThrottle(AbstractDelayingThrottle):
 
     def get_cache_timeout(self, n, t):
         """
-        calculate the cache timeout, because the timeouts
-        add up recursively we use the following formula:
+        Calculate the cache timeout.
+
+        Because the timeouts add up recursively we use the
+        following formula:
 
             n
         d = Σ t*i

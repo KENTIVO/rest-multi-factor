@@ -39,7 +39,7 @@ class DeviceMeta(ModelBase, type):
     @property
     def dispatchable(self):
         """
-        Tell's whether or not the challenge is dispatchable.
+        Tell whether or not the challenge is dispatchable.
 
         A challenge should dispatchable if there will be a
         unique secret for every token or such.
