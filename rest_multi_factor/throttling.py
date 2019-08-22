@@ -27,7 +27,7 @@ class AbstractDelayingThrottle(BaseThrottle, metaclass=abc.ABCMeta):
     """
     Mixin class that defines some default methods
     for all Throttle classes that could be used
-    with the Validation view.
+    with the verification view.
     """
 
     @property
@@ -103,7 +103,7 @@ class AbstractDelayingThrottle(BaseThrottle, metaclass=abc.ABCMeta):
             return value
 
         raise ImproperlyConfigured(
-            "The value of 'VALIDATION_THROTTLE_TIMEOUT'"
+            "The value of 'VERIFICATION_THROTTLE_TIMEOUT'"
             " must be in the format <value>[smhd] like for example ''30s'"
         )
 
@@ -114,7 +114,7 @@ class AbstractDelayingThrottle(BaseThrottle, metaclass=abc.ABCMeta):
         :return: The number of tryouts
         :rtype: int
         """
-        return multi_factor_settings.VALIDATION_THROTTLE_TRYOUTS
+        return multi_factor_settings.VERIFICATION_THROTTLE_TRYOUTS
 
     def get_timeout(self):
         """
@@ -124,7 +124,7 @@ class AbstractDelayingThrottle(BaseThrottle, metaclass=abc.ABCMeta):
         :return: The timout in seconds
         :rtype: int
         """
-        return self.parse_timeout(multi_factor_settings.VALIDATION_THROTTLE_TIMEOUT)
+        return self.parse_timeout(multi_factor_settings.VERIFICATION_THROTTLE_TIMEOUT)
 
     @classmethod
     def get_ident(cls, request):
@@ -171,7 +171,7 @@ class SimpleDelayingThrottle(AbstractDelayingThrottle):
 
     def allow_request(self, request, view):
         """
-        Check whether or not to allow a request to validate.
+        Check whether or not to allow a request to verify.
 
         :param request: The current request instance.
         :type request: rest_framework.request.Request

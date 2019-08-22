@@ -12,7 +12,7 @@ from rest_multi_factor.settings import multi_factor_settings
 
 
 class EncryptedField(CharField):
-    _encryption = multi_factor_settings.ENCRYPTION()
+    _encryption = multi_factor_settings.DEFAULT_ENCRYPTION_CLASS()
 
     def to_python(self, value):
         return self._encryption.decrypt(value)

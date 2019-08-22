@@ -10,9 +10,9 @@ r"""
 
 __title__ = "REST Multi Factor"
 __author__ = "Joël Maatkamp"
-__version__ = "1.0a.dev1"
+__version__ = "1.0a.dev2"
 __licence__ = ""
 
-VERSION = (1, 0, 0, "alpha", 1)
+VERSION = (1, 0, 0, "alpha", 2)
 
 default_app_config = "rest_multi_factor.apps.RestMultiFactorConfig"

@@ -8,7 +8,7 @@ from rest_framework.serializers import Serializer, CharField
 
 
 class ValueSerializer(Serializer):
-    """Serializer for the main value to validate."""
+    """Serializer for the main value to verify."""
 
     update = None
     create = None

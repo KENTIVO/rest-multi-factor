@@ -29,7 +29,7 @@ export const submit_registration = (index, content) => dispatch => {
 };
 
 
-export const submit_validation = (index, value, refresh) => dispatch => {
+export const submit_verification = (index, value, refresh) => dispatch => {
     const session = localStorage.getItem("token");
     const headers = {authorization: `Token ${session}`};
 

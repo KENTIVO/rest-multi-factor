@@ -6,7 +6,7 @@ import {
     GENERAL_FAILURE,
 
     SET_REGISTER_DEVICES,
-    SET_VALIDATE_DEVICES,
+    SET_VERIFIER_DEVICES,
 
 } from "../reducers/types";
 
@@ -33,7 +33,7 @@ export const get_usr_devices = () => dispatch => {
 
     axios.get(config.locate("/multi-factor/"), {headers})
         .then(response => {
-            dispatch({type: SET_VALIDATE_DEVICES, data: response.data})
+            dispatch({type: SET_VERIFIER_DEVICES, data: response.data})
         })
         .catch(response => {
             dispatch({type: GENERAL_FAILURE, data: response})

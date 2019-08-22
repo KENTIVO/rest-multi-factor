@@ -78,11 +78,11 @@ class TOTPChallenge(Challenge):
     device = ForeignKey(TOTPDevice, on_delete=CASCADE, editable=False)
     dispatch = None
 
-    def validate(self, token, save=True):
+    def verify(self, token, save=True):
         """
         Validate a token to check if this challenge can be confirmed.
 
-        :param token: The TOTP token to validate
+        :param token: The TOTP token to verify
         :type token: str | int
 
         :param save: Whether to save the result or not

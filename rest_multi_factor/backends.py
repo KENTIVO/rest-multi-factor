@@ -22,22 +22,22 @@ class AbstractVerificationBackend(metaclass=ABCMeta):
         :return:
         """
 
-    def get_steps(self):
+    def get_verifications(self):
         """
-        Get the number of steps required. Without this only
-        Two-factor would b available.
+        Get the number of verifications required. Without this only
+        two-factor would be available.
 
-        :return: The number of steps required
+        :return: The number of verifications required
         :rtype: int
         """
-        steps = multi_factor_settings.REQUIRED_STEPS
+        verifications = multi_factor_settings.REQUIRED_VERIFICATIONS
 
-        assert isinstance(steps, int) and steps > 0, (
-            f"'REQUIRED_STEPS' MUST be a non-zero positive integer not "
-            f"'{steps}', you could also configure another backend.>"
+        assert isinstance(verifications, int) and verifications > 0, (
+            f"'REQUIRED_VERIFICATIONS' MUST be a non-zero positive integer not "
+            f"'{verifications}', you could also configure another backend.>"
         )
 
-        return steps
+        return verifications
 
 
 class DefaultBackend(AbstractVerificationBackend):
@@ -47,6 +47,6 @@ class DefaultBackend(AbstractVerificationBackend):
 
         # ticket: https://code.djangoproject.com/ticket/28399
         if VERSION < (1, 11, 4):
-            return self.get_steps() - len(queryset)  # pragma: no cover
+            return self.get_verifications() - len(queryset)  # pragma: no cover
 
-        return self.get_steps() - queryset.count()  # pragma: no cover
+        return self.get_verifications() - queryset.count()  # pragma: no cover

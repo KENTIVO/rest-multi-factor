@@ -4,15 +4,15 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { get_usr_devices } from "../actions/devices";
-import { submit_validation } from "../actions/submit";
+import { submit_verification } from "../actions/submit";
 
-class Validate extends React.Component {
+class Verify extends React.Component {
     static propTypes = {
         devices: PropTypes.arrayOf(PropTypes.object),
-        validated: PropTypes.bool.isRequired,
+        verified: PropTypes.bool.isRequired,
 
         get_usr_devices: PropTypes.func.isRequired,
-        submit_validation: PropTypes.func.isRequired,
+        submit_verification: PropTypes.func.isRequired,
     };
 
     constructor(props) {
@@ -29,7 +29,7 @@ class Validate extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this.props.validated) {
+        if (this.props.verified) {
             this.props.history.push("/");
             return;
         }
@@ -50,7 +50,7 @@ class Validate extends React.Component {
 
     onSubmit(e) {
         if (this.state.current !== null && this.state.value !== null)
-            this.props.submit_validation(this.state.current, this.state.value)
+            this.props.submit_verification(this.state.current, this.state.value)
     }
 
     render() {
@@ -73,13 +73,13 @@ class Validate extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    devices: state.validate.devices,
-    validated: state.login.validated,
+    devices: state.verify.devices,
+    verified: state.login.verified,
 });
 
 const mapDispatchToProps = {
     get_usr_devices,
-    submit_validation,
+    submit_verification,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Validate)
+export default connect(mapStateToProps, mapDispatchToProps)(Verify)

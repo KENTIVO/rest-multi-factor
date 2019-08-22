@@ -22,7 +22,7 @@ class Login extends React.Component {
 
     componentDidUpdate() {
         if (this.props.authenticated)
-            this.props.history.push("/validate/");
+            this.props.history.push("/verify/");
     }
 
     onChange(e) {

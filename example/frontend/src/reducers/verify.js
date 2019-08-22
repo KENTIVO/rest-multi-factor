@@ -1,6 +1,6 @@
 import {
 
-    SET_VALIDATE_DEVICES,
+    SET_VERIFIER_DEVICES,
 
 } from "./types";
 
@@ -9,7 +9,7 @@ const initialState = {
 };
 
 export default function(state=initialState, action) {
-    if (action.type === SET_VALIDATE_DEVICES)
+    if (action.type === SET_VERIFIER_DEVICES)
         return {...state, devices: action.data};
 
     return state;

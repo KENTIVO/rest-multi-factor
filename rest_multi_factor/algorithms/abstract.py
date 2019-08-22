@@ -12,7 +12,7 @@ from rest_multi_factor.settings import multi_factor_settings
 class AbstractAlgorithm(metaclass=ABCMeta):
     """Abstract base class for algorithm implementations."""
 
-    should_validate = multi_factor_settings.RFC_VALIDATION
+    should_validate = multi_factor_settings.ALGORITHM_RFC_VALIDATION
 
     @abstractmethod
     def calculate(self, *args, **kwargs):

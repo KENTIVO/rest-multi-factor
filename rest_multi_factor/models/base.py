@@ -26,7 +26,7 @@ class Device(Model, metaclass=DeviceMeta):
 
     This model defines a multi factor option for a user.
     If a user doesn't have a device of a certain type of
-    validation, then the type isn't available for the user.
+    verification, then the type isn't available for the user.
     """
 
     class Meta:  # noqa: D106

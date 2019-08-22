@@ -9,14 +9,14 @@ import {
 } from "./types";
 
 const initialState = {
-    validated: false,
+    verified: false,
     authenticated: false,
 };
 
 export default function (state=initialState, action) {
 
     if (action.type === LOGIN_CHECKED)
-        return {...state, validated: true};
+        return {...state, verified: true};
 
     if (action.type === LOGIN_FAILURE)
         return {...state, authenticated: false};

@@ -3,7 +3,7 @@ Views for handling two factor authentication.
 """
 
 __all__ = (
-    "MultiFactorViewSet",
+    "MultiFactorVerifierViewSet",
     "MultiFactorRegistrationViewSet",
 )
 
@@ -27,7 +27,7 @@ from rest_multi_factor.serializers import DeviceSerializer, ValueSerializer
 from rest_multi_factor.permissions import IsTokenAuthenticated
 
 
-class MultiFactorViewSet(DeviceMixin, ViewSet):
+class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
     """
     ViewSet for user-specific device manipulations.
 
@@ -39,7 +39,7 @@ class MultiFactorViewSet(DeviceMixin, ViewSet):
     lookup_field = "index"
     lookup_value_regex = r"\d+"
 
-    backend_class = multi_factor_settings.DEFAULT_BACKEND
+    backend_class = multi_factor_settings.DEFAULT_BACKEND_CLASS
     parser_classes = (JSONParser,)
     renderer_classes = (JSONRenderer,)
     serializer_class = ValueSerializer
@@ -69,8 +69,8 @@ class MultiFactorViewSet(DeviceMixin, ViewSet):
 
         return Response(data=DeviceSerializer(prepared).data)
 
-    @throttle_classes(multi_factor_settings.THROTTLING_CLASSES)
-    def validate(self, request, **kwargs):
+    @throttle_classes(multi_factor_settings.VERIFICATION_THROTTLING_CLASSES)
+    def verify(self, request, **kwargs):
         val = self.get_value(request)
         dev = self.get_user_device(request.user, **kwargs)
 
@@ -85,14 +85,14 @@ class MultiFactorViewSet(DeviceMixin, ViewSet):
         # dispatchable challenges when they don't yet exist.
         if dev.dispatchable:
             challenge = get_object_or_404(queryset, token=request.auth, confirm=False)
-            confirmed = challenge.validate(val)
+            confirmed = challenge.verify(val)
 
         elif not queryset.filter(token=request.auth, confirm=True).exists():
             challenge = queryset.get_or_create(device=instance, token=request.auth, confirm=False)[0]
-            confirmed = challenge.validate(val)
+            confirmed = challenge.verify(val)
 
         if not confirmed:
-            headers = {"WWW-Authenticate": "JSON realm=\"multi factor validation\""}
+            headers = {"WWW-Authenticate": "JSON realm=\"multi factor verification\""}
             return Response(status=401, headers=headers)
 
         backend = self.get_backend()
@@ -100,7 +100,7 @@ class MultiFactorViewSet(DeviceMixin, ViewSet):
 
         self.clear_cache(self.get_throttles(), request)
 
-        return Response({"steps-left": counted}, status=200)
+        return Response({"verifications-left": counted}, status=200)
 
     def dispatch_challenge(self, request, **kwargs):
         device = self.get_user_device(request.user, **kwargs)
@@ -120,13 +120,13 @@ class MultiFactorViewSet(DeviceMixin, ViewSet):
 
     def get_value(self, request):
         """
-        Extract's the value that needs to be validated
+        Extract's the value that needs to be verified
         from a request.
 
         :param request: The current request instance
         :type request: rest_framework.request.Request
 
-        :return: The value to validate
+        :return: The value to verify
         :rtype: str
         """
         serializer = self.get_serializer(data=request.data)
@@ -176,7 +176,7 @@ class MultiFactorViewSet(DeviceMixin, ViewSet):
         :param args: The additional keyword arguments for the serializer
         :type args: dict
 
-        :return: The serializer instance to use for validation
+        :return: The serializer instance to use for verification
         :rtype: rest_framework.serializers.Serializer
         """
         serializer_class = self.get_serializer_class()
@@ -212,7 +212,7 @@ class MultiFactorViewSet(DeviceMixin, ViewSet):
 
     def clear_cache(self, classes, request):
         """
-        Clear the cache of the validation throttlers.
+        Clear the cache of the verification throttlers.
 
         :param classes: The throttle classes to clear
         :type classes: iterable

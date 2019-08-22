@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import BasicAuthentication
 
-from rest_multi_factor.permissions import IsValidated
+from rest_multi_factor.permissions import IsVerified
 
 
 class LoginView(BaseLoginView):
@@ -14,7 +14,7 @@ class LoginView(BaseLoginView):
 
 
 class AccessedView(APIView):
-    permission_classes = (IsValidated,)
+    permission_classes = (IsVerified,)
 
     def get(self, request, **kwargs):
         return Response("Access granted")

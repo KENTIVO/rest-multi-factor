@@ -1,9 +1,9 @@
 """Permission classes for multi factor requiring REST APIs."""
 
 __all__ = (
-    "IsValidated",
+    "IsVerified",
     "IsTokenAuthenticated",
-    "IsValidatedOrNoDevice"
+    "IsVerifiedOrNoDevice"
 )
 
 from django import VERSION
@@ -42,14 +42,14 @@ class IsTokenAuthenticated(BasePermission):
         return bool(request.user and request.user.is_authenticated and request.auth is not None)
 
 
-class IsValidated(IsTokenAuthenticated):
+class IsVerified(IsTokenAuthenticated):
     """
     Permission that requires multi factor.
 
-    This permission requires that the token is completely validated.
+    This permission requires that the token is completely verified.
     """
 
-    backend_class = multi_factor_settings.DEFAULT_BACKEND
+    backend_class = multi_factor_settings.DEFAULT_BACKEND_CLASS
 
     def has_permission(self, request, view):
         """
@@ -85,11 +85,11 @@ class IsValidated(IsTokenAuthenticated):
         return self.backend_class()
 
 
-class IsValidatedOrNoDevice(IsValidated):
+class IsVerifiedOrNoDevice(IsVerified):
     """
     Permission that requires multi factor if available.
 
-    This permission allows access if completely validated
+    This permission allows access if completely verified
     or if no device is registered. This can be useful for
     first time requirement of multi factor.
     """
@@ -107,7 +107,7 @@ class IsValidatedOrNoDevice(IsValidated):
         :return: Whether permission is granted or not
         :rtype: bool
         """
-        IsValidated.has_permission(self, request, view) or not self.has_devices(request.user)
+        IsVerified.has_permission(self, request, view) or not self.has_devices(request.user)
 
     def has_devices(self, user):
         """

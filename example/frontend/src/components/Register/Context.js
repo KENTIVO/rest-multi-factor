@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import { connect } from "react-redux";
-import { submit_validation } from "../../actions/submit";
+import { submit_verification } from "../../actions/submit";
 
 
 class Context extends React.Component {
@@ -11,7 +11,7 @@ class Context extends React.Component {
         context: PropTypes.object.isRequired,
         current: PropTypes.number.isRequired,
 
-        submit_validation: PropTypes.func.isRequired,
+        submit_verification: PropTypes.func.isRequired,
     };
 
     constructor(props) {
@@ -42,7 +42,7 @@ class Context extends React.Component {
         if (this.state.value === null)
             return;
 
-        this.props.submit_validation(this.props.current, this.state.value);
+        this.props.submit_verification(this.props.current, this.state.value);
         this.props.history.push("/");
     }
 
@@ -69,4 +69,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps, {submit_validation})(Context);
+export default connect(mapStateToProps, {submit_verification})(Context);

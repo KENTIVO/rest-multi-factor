@@ -24,29 +24,29 @@ class ChallengeMixin(object):
 
     def dispatch(self):
         """
-        Dispatch the challenge with a secret.
+        Dispatch the challenge with a value to be verified.
 
         If this challenge isn't dispatchable, then this method must be
         overridden as None.
 
-        :return: The secret that is used
+        :return: The value that is used
         :rtype: str | int
         """
         raise NotImplementedError("This method must be implemented")  # pragma: no cover
 
-    def validate(self, secret, save=True):
+    def verify(self, value, save=True):
         """
-        Validate the secret.
+        Verify the value.
 
         This method also set's the confirm attribute of the model.
 
-        :param secret: The secret of this challenge
-        :type secret: str | int
+        :param value: The value of this challenge to verify
+        :type value: str | int
 
         :param save: Whether this model should call self.save() or not
         :type save: bool
 
-        :return: Whether the secret is confirmed or not
+        :return: Whether the value is confirmed or not
         :rtype: bool
         """
         raise NotImplementedError("This method must be implemented")  # pragma: no cover

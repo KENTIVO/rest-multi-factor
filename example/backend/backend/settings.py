@@ -42,8 +42,6 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
 
-    "django_extensions",
-
     "rest_multi_factor",
     "rest_multi_factor.plugins.totp",
 ]

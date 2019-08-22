@@ -6,16 +6,15 @@ import { combineReducers } from "redux";
 
 import login from "./login";
 import access from "./access";
-
+import verify from "./verify";
 import register from "./register";
-import validate from "./validate";
 
 
 export default combineReducers({
     login,
     access,
+    verify,
     register,
-    validate,
 
     router: connectRouter(history),
 })

@@ -9,7 +9,7 @@ import history from "./history";
 
 import Login from "./components/Login";
 import Access from "./components/Access";
-import Validate from "./components/Validate";
+import Verify from "./components/Verify";
 
 import Device from "./components/Register/Device";
 import Context from "./components/Register/Context";
@@ -22,9 +22,9 @@ function App() {
             <ConnectedRouter history={history}>
                 <Switch>
                     <Route exact component={Access} path="/"/>
-                    <Route exact component={Login} path="/login/"/>
+                    <Route exact component={Login}  path="/login/"/>
 
-                    <Route exact component={Validate} path="/validate/"/>
+                    <Route exact component={Verify}   path="/verify/"/>
                     <Route exact component={Register} path="/register/"/>
                     <Route exact component={Context}  path="/register/context/"/>
                     <Route exact component={Device}   path="/register/device/"/>

@@ -10,7 +10,7 @@ import { request_access } from "../actions/access";
 class Access extends React.Component {
     static propTypes = {
         content: PropTypes.string.isRequired,
-        validated: PropTypes.bool.isRequired,
+        verified: PropTypes.bool.isRequired,
         authenticated: PropTypes.bool.isRequired,
 
         logout: PropTypes.func.isRequired,
@@ -30,8 +30,8 @@ class Access extends React.Component {
         if (!this.props.authenticated)
             this.props.history.push("/login/");
 
-        else if (!this.props.validated)
-            this.props.history.push("/validate/");
+        else if (!this.props.verified)
+            this.props.history.push("/verify/");
     }
 
     render() {
@@ -46,7 +46,7 @@ class Access extends React.Component {
 
 const mapStateToProps = state => ({
     content: state.access.content,
-    validated: state.login.validated,
+    verified: state.login.verified,
     authenticated: state.login.authenticated,
 });
 

@@ -2,13 +2,13 @@
 
 __all__ = (
     "MultiFactorRegisterRouter",
-    "MultiFactorValidationRouter",
+    "MultiFactorVerifierRouter",
 )
 
 from rest_framework.routers import SimpleRouter, DynamicRoute, Route
 
 
-class MultiFactorValidationRouter(SimpleRouter):
+class MultiFactorVerifierRouter(SimpleRouter):
     """
     Custom router for the MultiFactorViewSet.
 
@@ -38,7 +38,7 @@ class MultiFactorValidationRouter(SimpleRouter):
             url=r"^{prefix}/{lookup}{trailing_slash}$",
             mapping={
                 "get": "retrieve",
-                "post": "validate",
+                "post": "verify",
             },
             name="{basename}-specific",
             detail=True,
