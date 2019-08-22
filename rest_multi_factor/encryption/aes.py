@@ -9,9 +9,11 @@ __all__ = (
 import base64
 import hashlib
 
+
 from django.conf import settings
 
 from cryptography.fernet import Fernet
+
 
 from rest_multi_factor.encryption.abstract import AbstractEncryption
 

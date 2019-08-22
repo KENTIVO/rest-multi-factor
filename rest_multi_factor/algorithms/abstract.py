@@ -6,6 +6,7 @@ __all__ = (
 
 from abc import ABCMeta, abstractmethod
 
+
 from rest_multi_factor.settings import multi_factor_settings
 
 

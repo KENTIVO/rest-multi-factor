@@ -11,20 +11,18 @@ DEFAULTS = {
     # because knox encrypts tokens and allows multiple tokens per user.
     "AUTH_TOKEN_MODEL": "authtoken.Token",
 
-    # verification backends check if a user/token is verified
-    # with a one time password.
+    # verification backends check if a user/token is verified with a one time
+    # password.
     "DEFAULT_BACKEND_CLASS": "rest_multi_factor.backends.DefaultBackend",
 
-    # The encryption settings points to the encryption
-    # handler for storing sensitive values that need te
-    # be decrypted again.
-    "DEFAULT_ENCRYPTION_CLASS": "rest_multi_factor.encryption.aes.AESEncryption",
+    # The encryption settings points to the encryption handler for storing
+    # sensitive values that need te be decrypted again.
+    "DEFAULT_ENCRYPTION_CLASS":
+        "rest_multi_factor.encryption.aes.AESEncryption",
 
-
-    # The throttle class for the verify() view. It is crucial
-    # that if this setting is changed that it is taught through
-    # because these throttles are the only thing that protects
-    # the verification against brute force attacks.
+    # The throttle class for the verify() view. It is crucial that if this
+    # setting is changed that it is taught through because these throttles are
+    # the only thing that protects the verification against brute force attacks
     "VERIFICATION_THROTTLING_CLASSES": (
         "rest_multi_factor.throttling.RecursiveDelayingThrottle",
     ),
@@ -34,14 +32,14 @@ DEFAULTS = {
     # XXX NOTE: MUST be one or more
     "REQUIRED_VERIFICATIONS": 1,
 
-    # RFC validation checks if the security proposals of RFC 4226 and RFC 6238 are met.
-    # It is advised to keep
-    # this setting to True. At least in development.
+    # RFC validation checks if the security proposals of RFC 4226 and RFC 6238
+    # are met. It is advised to keep this setting to True, at least in
+    # development.
     "ALGORITHM_RFC_VALIDATION": True,
 
-    # Throttle tryouts and timeout are value's that tell how many times a token/secret
-    # may be tried to be verified and the time to wait. A minimal of 30 seconds is advised
-    # against brute forcing TOTP token
+    # Throttle tryouts and timeout are value's that tell how many times a token
+    # or secret may be tried to be verified and the time to wait. A minimal of
+    # 30 seconds is advised against brute forcing TOTP token
     "VERIFICATION_THROTTLE_TRYOUTS": 5,
     "VERIFICATION_THROTTLE_TIMEOUT": "30s",
 }

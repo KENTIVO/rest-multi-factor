@@ -9,7 +9,9 @@ import struct
 import hashlib
 import warnings
 
-from rest_multi_factor.exceptions import RFCGuidanceException, RFCGuidanceWarning
+
+from rest_multi_factor.exceptions import RFCGuidanceWarning
+from rest_multi_factor.exceptions import RFCGuidanceException
 from rest_multi_factor.algorithms.abstract import AbstractAlgorithm
 
 
@@ -33,9 +35,10 @@ class HOTPAlgorithm(AbstractAlgorithm):
         :type counter: int
 
         :param digits: The number of digits for the HOTP value,
-                       This MUST be at least be 6 digits long
+        this MUST be at least be 6 digits long
 
-        :param algorithm: The hash algorithm to use, should be either sha1, sha256 or sha512
+        :param algorithm: The hash algorithm to use,
+        should be either sha1, sha256 or sha512
         :type algorithm: function
 
         :return: The calculated HOTP value
@@ -81,7 +84,7 @@ class HOTPAlgorithm(AbstractAlgorithm):
 
         if len(secret) < 20:
             warnings.warn(
-                "RFC 4226 section 4 - requirement 6 RECOMMENDs"
+                "RFC 4226 section 4 - requirement 6 RECOMMENDS"
                 " that the shared secret is at least 160-bits",
                 RFCGuidanceWarning
             )

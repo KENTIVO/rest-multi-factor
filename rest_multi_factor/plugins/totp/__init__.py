@@ -8,10 +8,11 @@ from rest_multi_factor.registry import registry
 from rest_multi_factor.settings import multi_factor_settings
 
 
-from .settings import DEFAULTS, LOADABLE
+from rest_multi_factor.plugins.totp.settings import DEFAULTS, LOADABLE
 
 
-if not bool(len(set(multi_factor_settings.defaults.keys()) & set(DEFAULTS.keys()))):
+duplicates = set(multi_factor_settings.defaults.keys()) & set(DEFAULTS.keys())
+if not bool(len(duplicates)):
     multi_factor_settings.register(DEFAULTS, LOADABLE)
 
 if not registry.initialized:

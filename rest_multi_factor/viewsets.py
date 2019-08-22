@@ -107,15 +107,21 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
         # still respected we won't create a new challenge for
         # dispatchable challenges when they don't yet exist.
         if dev.dispatchable:
-            challenge = get_object_or_404(queryset, token=request.auth, confirm=False)
+            challenge = get_object_or_404(
+                queryset, token=request.auth, confirm=False
+            )
             confirmed = challenge.verify(val)
 
         elif not queryset.filter(token=request.auth, confirm=True).exists():
-            challenge = queryset.get_or_create(device=instance, token=request.auth, confirm=False)[0]
+            challenge = queryset.get_or_create(
+                device=instance, token=request.auth, confirm=False
+            )[0]
             confirmed = challenge.verify(val)
 
         if not confirmed:
-            headers = {"WWW-Authenticate": "JSON realm=\"multi factor verification\""}
+            headers = {
+                "WWW-Authenticate": "JSON realm=\"multi factor verification\""
+            }
             return Response(status=401, headers=headers)
 
         backend = self.get_backend()
@@ -143,12 +149,14 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
             raise NotFound("The requested device could not dispatch.")
 
         instance = get_object_or_404(device, user=request.user)
-        challenge = device.challenge.objects.get_or_create(device=instance, token=request.auth)[0]
+        challenge = device.challenge.objects.get_or_create(
+            device=instance, token=request.auth
+        )[0]
 
         if challenge.confirm:
             return Response({
-                "message": "The token is already verified", "code": status.HTTP_409_CONFLICT
-            }, status.HTTP_409_CONFLICT)
+                "message": "The token is already verified", "code": 409
+            }, 409)
 
         challenge.dispatch()
         return Response(status=204)
@@ -194,7 +202,8 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
         """
         assert self.backend_class is not None, (
             f"'{self.__class__.__name__}' should either include a "
-            f"`backend_class` attribute, or override the `get_backend()` method."
+            f"`backend_class` attribute, or override the "
+            f"`get_backend()` method."
         )
 
         return self.backend_class()
@@ -230,8 +239,9 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
         (Eg. admins get full serialization, others get basic serialization)
         """
         assert self.serializer_class is not None, (
-            f"'{self.__class__.__name__}' should either include a `serializer_class`"
-            f" attribute, or override the `get_serializer_class()` method."
+            f"'{self.__class__.__name__}' should either include a "
+            f"`serializer_class` attribute, or override the "
+            f"`get_serializer_class()` method."
         )
 
         return self.serializer_class
@@ -255,7 +265,11 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
         :param request: The current request instance
         :type request: rest_framework.request.Request
         """
-        for klass in (c for c in classes if isinstance(c, AbstractDelayingThrottle)):
+        throttles = (
+            c for c in classes if isinstance(c, AbstractDelayingThrottle)
+        )
+
+        for klass in throttles:
             klass.clear(request)
 
     def get_throttles(self):
@@ -319,15 +333,9 @@ class MultiFactorRegistrationViewSet(DeviceMixin, ViewSet):
 
         return Response(serializer.data)
 
-    def overview(self, request, **kwargs):
+    def overview(self, *_, **__):
         """
         Serve a overview of all devices that can be registered.
-
-        :param request: The current request instance
-        :type request: rest_framework.request.Request
-
-        :param kwargs: The additional keyword arguments
-        :type kwargs: int
 
         :return: The current response
         :rtype: rest_framework.response.Response

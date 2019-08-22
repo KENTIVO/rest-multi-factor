@@ -7,6 +7,7 @@ __all__ = (
 import time
 import hashlib
 
+
 from rest_multi_factor.algorithms.hotp import HOTPAlgorithm
 
 
@@ -23,13 +24,14 @@ class TOTPAlgorithm(HOTPAlgorithm):
     change (every 30 seconds) without the secret that changes.
     """
 
-    def calculate(self, secret, step=30, time_zero=0, digits=6, drift=0, algorithm=hashlib.sha1):
+    def calculate(self, secret, step=30, time_zero=0, digits=6, drift=0,
+                  algorithm=hashlib.sha1):
         """
         Calculate a TOTP value.
 
         This is basically a extension of the HOTP algorithm.
 
-        :param secret: The secret that will be encoded to a TOPT value
+        :param secret: The secret that will be encoded to a TOTP value
         :type secret: bytes
 
         :param step: The number of seconds within a step
@@ -41,18 +43,21 @@ class TOTPAlgorithm(HOTPAlgorithm):
         :param digits: The number of digits that the TOPT value will have
         :type digits: int
 
-        :param drift: The drift that is to be used. This can be
-                      used for validation to get a TOTP value of a number of steps forward or back
+        :param drift: The drift that is to be used. This can be used for
+        validation to get a TOTP value of a number of steps forward or back
         :type drift: int
 
-        :param algorithm: The hash algorithm to use, should be either sha1, sha256 or sha512
+        :param algorithm: The hash algorithm to use, should be either sha1,
+        sha256 or sha512
         :type algorithm: function
 
         :return: The encoded secret (The TOTP value)
         :rtype: int
         """
         calculated = self.calculate_step(time_zero, step, drift)
-        return HOTPAlgorithm.calculate(self, secret, calculated, digits, algorithm)
+        return HOTPAlgorithm.calculate(
+            self, secret, calculated, digits, algorithm
+        )
 
     @staticmethod
     def calculate_step(time_zero, step, drift):
@@ -65,8 +70,8 @@ class TOTPAlgorithm(HOTPAlgorithm):
         :param step: The number of seconds within a single step
         :type step: int
 
-        :param drift: The drift that is to be used. This can be
-                      used for validation to get a TOTP value of a number of steps forward or back
+        :param drift: The drift that is to be used. This can be used for
+        validation to get a TOTP value of a number of steps forward or back
         :type drift: int
 
         :return: The number of steps within the time range from time zero (T0)

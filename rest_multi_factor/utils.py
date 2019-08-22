@@ -11,7 +11,6 @@ from django import VERSION
 from django.apps import apps
 from django.contrib.auth import get_user_model
 from django.db.models.query import EmptyQuerySet, Q
-
 from django.core.exceptions import ImproperlyConfigured
 
 
@@ -29,14 +28,20 @@ def get_token_model():
     setting is incorrect or if it could not been found.
     """
     try:
-        return apps.get_model(multi_factor_settings.AUTH_TOKEN_MODEL, require_ready=False)
+        return apps.get_model(
+            multi_factor_settings.AUTH_TOKEN_MODEL, require_ready=False
+        )
 
     except ValueError:
-        raise ImproperlyConfigured("AUTH_TOKEN_MODEL must be of the form 'app_label.model_name'")
+        raise ImproperlyConfigured(
+            "AUTH_TOKEN_MODEL must be of the form 'app_label.model_name'"
+        )
 
     except LookupError:
         raise ImproperlyConfigured(
-            f"AUTH_TOKEN_MODEL refers to model '{multi_factor_settings.AUTH_TOKEN_MODEL}' that has not been installed"
+            f"AUTH_TOKEN_MODEL refers to model "
+            f"'{multi_factor_settings.AUTH_TOKEN_MODEL}' "
+            f"that has not been installed"
         )
 
 
@@ -103,8 +108,8 @@ def unify_queryset(base, fields=None, filter=None, queryset=None):
     filtered = (m.objects.filter(filter).values(*fields) for m in models)
 
     # ticket: https://code.djangoproject.com/ticket/28293
-    if VERSION < (2, 0, 0) and isinstance(queryset, EmptyQuerySet):  # pragma: no cover
-        filtered = list(filtered)
-        queryset = filtered.pop(0)
+    if VERSION < (2, 0, 0) and isinstance(queryset, EmptyQuerySet):
+        filtered = list(filtered)  # pragma: no cover
+        queryset = filtered.pop(0)  # pragma: no cover
 
     return queryset.union(*filtered, all=True)

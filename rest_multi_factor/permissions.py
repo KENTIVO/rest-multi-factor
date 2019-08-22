@@ -38,7 +38,10 @@ class IsTokenAuthenticated(BasePermission):
         :return: Whether permission is granted or not
         :rtype: bool
         """
-        return bool(request.user and request.user.is_authenticated and request.auth is not None)
+        return bool(
+            request.user and request.user.is_authenticated
+            and request.auth is not None
+        )
 
 
 class IsVerified(IsTokenAuthenticated):
@@ -66,7 +69,10 @@ class IsVerified(IsTokenAuthenticated):
         backend = self.get_backend()
         counted = backend.verify(request.auth, view)
 
-        return IsTokenAuthenticated.has_permission(self, request, view) and counted == 0
+        return (
+            IsTokenAuthenticated.has_permission(self, request, view)
+            and counted == 0
+        )
 
     def get_backend(self):
         """
@@ -77,7 +83,8 @@ class IsVerified(IsTokenAuthenticated):
         """
         assert self.backend_class is not None, (
             f"'{self.__class__.__name__}' should either include a "
-            f"`backend_class` attribute, or override the `get_backend()` method."
+            f"`backend_class` attribute, or override the "
+            f"`get_backend()` method."
         )
 
         return self.backend_class()
@@ -105,7 +112,10 @@ class IsVerifiedOrNoDevice(IsVerified):
         :return: Whether permission is granted or not
         :rtype: bool
         """
-        IsVerified.has_permission(self, request, view) or not self.has_devices(request.user)
+        return (
+                IsVerified.has_permission(self, request, view)
+                or not self.has_devices(request.user)
+        )
 
     def has_devices(self, user):
         """
@@ -120,4 +130,7 @@ class IsVerifiedOrNoDevice(IsVerified):
         queryset = unify_queryset(Device, ("id",), Q(user=user))
 
         # ticket: https://code.djangoproject.com/ticket/28399
-        return bool(len(queryset) if VERSION < (1, 11, 4) else queryset.count())
+        if VERSION < (1, 11, 4):
+            return bool(len(queryset))
+
+        return bool(queryset.count())

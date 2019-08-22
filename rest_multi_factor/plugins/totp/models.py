@@ -10,8 +10,10 @@ import base64
 import binascii
 import urllib.parse
 
+
 from django.db.models.deletion import CASCADE
 from django.db.models.fields.related import ForeignKey
+
 
 from rest_multi_factor.fields import EncryptedField
 from rest_multi_factor.models import Device, Challenge
@@ -31,7 +33,9 @@ class TOTPDevice(Device):
     every 30 seconds (by default).
     """
 
-    secret = EncryptedField(max_length=255, editable=False, default=_generate_secret)
+    secret = EncryptedField(
+        max_length=255, editable=False, default=_generate_secret
+    )
 
     @property
     def authenticator_url(self):
@@ -47,7 +51,7 @@ class TOTPDevice(Device):
             - period
             - algorithm
 
-        see: https://github.com/google/google-authenticator/wiki/Key-Uri-Format,
+        see: https://github.com/google/google-authenticator/wiki/Key-Uri-Format
 
         :return: A URI that can be synchronised with google authenticator
         :rtype: str
@@ -65,7 +69,9 @@ class TOTPDevice(Device):
             "algorithm": digest.name.upper(),
         })
 
-        return urllib.parse.urlunparse(("otpauth", "totp", label, None, params, None))
+        return urllib.parse.urlunparse(
+            ("otpauth", "totp", label, None, params, None)
+        )
 
 
 class TOTPChallenge(Challenge):
@@ -108,7 +114,9 @@ class TOTPChallenge(Challenge):
         tolerance = multi_factor_settings.TOTP_TOLERANCE
 
         for offset in range(-tolerance, tolerance+1):
-            tryout = algorithm.calculate(self.device.secret, period, 0, digits, offset, digest)
+            tryout = algorithm.calculate(
+                self.device.secret, period, 0, digits, offset, digest
+            )
 
             if tryout == token:
                 self.confirm = True

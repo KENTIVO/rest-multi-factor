@@ -15,4 +15,6 @@ from rest_multi_factor.settings.settings import MultiFactorSettings
 from rest_multi_factor.settings.constants import NAMESPACE, DEFAULTS, LOADABLE
 
 
-multi_factor_settings = MultiFactorSettings(None, DEFAULTS, LOADABLE, NAMESPACE)
+multi_factor_settings = MultiFactorSettings(
+    None, DEFAULTS, LOADABLE, NAMESPACE
+)

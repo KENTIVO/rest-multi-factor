@@ -30,7 +30,8 @@ class DeviceMixin(object):
         :return: The requested device
         :rtype: rest_multi_factor.models.meta.DeviceMeta
 
-        :raises rest_framework.exceptions.NotFound: When no device with the index was found.
+        :raises rest_framework.exceptions.NotFound: When no device with the
+        index was found.
         """
         index = int(index)
         devices = self.get_devices()
@@ -53,7 +54,8 @@ class DeviceMixin(object):
         :return: The request device
         :rtype: rest_multi_factor.models.meta.DeviceMeta
 
-        :raises rest_framework.exceptions.NotFound: When no device with the index was found.
+        :raises rest_framework.exceptions.NotFound: When no device with the
+        index was found.
         """
         index = int(index)
         devices = self.get_user_devices(user, fill=True)
@@ -154,10 +156,14 @@ class DeviceMixin(object):
         token = request.auth
         instance = device.objects.get(user=request.user)
 
-        challenge = device.challenge.objects.get_or_create(device=instance, token=token)[0]
+        challenge = device.challenge.objects.get_or_create(
+            device=instance, token=token
+        )[0]
         confirmed = challenge.confirm
 
-        return SpecificDeviceContainer(index, confirmed, device.verbose_name, device.dispatchable)
+        return SpecificDeviceContainer(
+            index, confirmed, device.verbose_name, device.dispatchable
+        )
 
     def prepare_general(self, device, index):
         """
@@ -175,4 +181,6 @@ class DeviceMixin(object):
         :return: A container with the distributed info of a device
         :rtype: rest_multi_factor.containers.DeviceContainer
         """
-        return GeneralDeviceContainer(index, device.verbose_name, device.dispatchable)
+        return GeneralDeviceContainer(
+            index, device.verbose_name, device.dispatchable
+        )

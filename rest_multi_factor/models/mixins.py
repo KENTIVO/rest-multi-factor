@@ -1,5 +1,9 @@
 """Mixin classes for the main abstract devices."""
 
+__all__ = (
+    "ChallengeMixin",
+)
+
 
 class ChallengeMixin(object):
     """
@@ -11,7 +15,7 @@ class ChallengeMixin(object):
     """
 
     @property
-    def device(self):
+    def device(self):  # pragma: no cover
         """
         Foreign key that points to the correct device.
 
@@ -20,9 +24,9 @@ class ChallengeMixin(object):
         :return: The ForeignKey to the correct device
         :rtype: django.db.models.fields.related.ForeignKey
         """
-        raise NotImplementedError("This property must be overridden")  # pragma: no cover
+        raise NotImplementedError("This property must be overridden")
 
-    def dispatch(self):
+    def dispatch(self):  # pragma: no cover
         """
         Dispatch the challenge with a value to be verified.
 
@@ -32,9 +36,9 @@ class ChallengeMixin(object):
         :return: The value that is used
         :rtype: str | int
         """
-        raise NotImplementedError("This method must be implemented")  # pragma: no cover
+        raise NotImplementedError("This method must be implemented")
 
-    def verify(self, value, save=True):
+    def verify(self, value, save=True):  # pragma: no cover
         """
         Verify the value.
 
@@ -49,4 +53,4 @@ class ChallengeMixin(object):
         :return: Whether the value is confirmed or not
         :rtype: bool
         """
-        raise NotImplementedError("This method must be implemented")  # pragma: no cover
+        raise NotImplementedError("This method must be implemented")

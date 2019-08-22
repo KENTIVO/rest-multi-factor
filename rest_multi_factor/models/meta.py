@@ -7,6 +7,7 @@ __all__ = (
 from django.db.models.base import ModelBase
 from django.core.exceptions import FieldDoesNotExist, FieldError
 
+
 from rest_multi_factor.models.mixins import ChallengeMixin
 
 
@@ -60,7 +61,7 @@ class DeviceMeta(ModelBase, type):
         return getattr(cls, "_meta").verbose_name
 
     @property
-    def serializer(self):
+    def serializer(self):  # pragma: no cover
         """
         The serializer class for this model.
 
@@ -70,7 +71,7 @@ class DeviceMeta(ModelBase, type):
         :return: The related serializer
         :rtype: type of rest_framework.serializers.Serializer
         """
-        raise NotImplementedError("This property must be overridden")  # pragma: no cover
+        raise NotImplementedError("This property must be overridden")
 
     def _get_challenge(cls, relations):
         """
@@ -79,17 +80,21 @@ class DeviceMeta(ModelBase, type):
         Locating the relation is done through the mixin class
         instead of the Challenge model to prevent circular imports.
 
-        :param relations:
-        :type relations: tuple of django.db.models.fields.reverse_related.ForeignObjectRel
+        :param relations: The relations
+        :type relations: tuple
 
         :return: The related challenge of this device
         :rtype: type of rest_multi_factor.models.mixins.ChallengeMixin
         """
-        challenges = tuple(r.related_model for r in relations if issubclass(r.related_model, ChallengeMixin))
-        if not challenges:
-            raise FieldDoesNotExist("No reverse relation found to a challenge")  # pragma: no cover
+        challenges = tuple(
+            r.related_model for r in relations
+            if issubclass(r.related_model, ChallengeMixin)
+        )
 
-        if len(challenges) > 1:
-            raise FieldError("Multiple challenge relation found, only one is allowed")  # pragma: no cover
+        if not challenges:  # pragma: no cover
+            raise FieldDoesNotExist("No reverse relation found to a challenge")
+
+        if len(challenges) > 1:  # pragma: no cover
+            raise FieldError("Multiple relations to challenges found")
 
         return challenges[0]

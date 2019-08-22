@@ -127,7 +127,9 @@ class AbstractDelayingThrottle(BaseThrottle, metaclass=abc.ABCMeta):
         :return: The timout in seconds
         :rtype: int
         """
-        return self.parse_timeout(multi_factor_settings.VERIFICATION_THROTTLE_TIMEOUT)
+        return self.parse_timeout(
+            multi_factor_settings.VERIFICATION_THROTTLE_TIMEOUT
+        )
 
     @classmethod
     def get_ident(cls, request):
@@ -141,10 +143,14 @@ class AbstractDelayingThrottle(BaseThrottle, metaclass=abc.ABCMeta):
         :rtype: str
         """
         if not request.user.is_authenticated:
-            raise ImproperlyConfigured("Authentication must be checked before auth throttle")
+            raise ImproperlyConfigured(
+                "Authentication must be checked before auth throttle"
+            )
 
         if not request.auth:
-            raise ImproperlyConfigured("Authentication must be token based to use this throttle")
+            raise ImproperlyConfigured(
+                "Authentication must be token based to use this throttle"
+            )
 
         return urllib.parse.quote(f"{cls.scope} {request.auth}")
 
@@ -268,7 +274,9 @@ class RecursiveDelayingThrottle(AbstractDelayingThrottle):
         """
         identifier = self.get_ident(request)
 
-        cache_timeout = self.get_cache_timeout(self.get_tryouts(), self.get_timeout())
+        cache_timeout = self.get_cache_timeout(
+            self.get_tryouts(), self.get_timeout()
+        )
 
         self.timeout = self.get_timeout()
         self.tryouts = self.cache.get_or_set(identifier, (), cache_timeout)
@@ -276,7 +284,8 @@ class RecursiveDelayingThrottle(AbstractDelayingThrottle):
         if self.wait() > 0:
             return False
 
-        self.cache.set(identifier, (*self.tryouts, self.timer())[-self.get_tryouts():], cache_timeout)
+        truncated = (*self.tryouts, self.timer())[-self.get_tryouts():]
+        self.cache.set(identifier, truncated, cache_timeout)
         return True
 
     def wait(self):
@@ -289,7 +298,8 @@ class RecursiveDelayingThrottle(AbstractDelayingThrottle):
         if not bool(len(self.tryouts)):
             return 0
 
-        return (self.tryouts[-1] + (len(self.tryouts) * self.timeout)) - self.timer()
+        timeout = (self.tryouts[-1] + (len(self.tryouts) * self.timeout))
+        return timeout - self.timer()
 
     def get_cache_timeout(self, n, t):
         """

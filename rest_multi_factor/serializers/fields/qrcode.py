@@ -51,14 +51,14 @@ class QRURIField(Field):
 
         return base64.b64encode(buffer.read())
 
-    def to_internal_value(self, data):
+    def to_internal_value(self, data):  # noqa: no cover
         """
         Ignored method, this field is read-only.
 
         :param data: The data to ignore
         :type data: any
         """
-        raise NotImplementedError("This method must be overridden")  # noqa: no cover
+        raise NotImplementedError("This method must be overridden")
 
 
 # Register the field within the metadata for rendering support

@@ -11,6 +11,7 @@ __all__ = (
 from django.conf import settings
 from django.test.signals import setting_changed
 
+
 from rest_framework.settings import APISettings
 
 
@@ -21,7 +22,8 @@ class MultiFactorSettings(APISettings):
     This class is responsible for loading and updating custom settings.
     """
 
-    def __init__(self, user_settings=None, defaults=None, import_strings=None, namespace=None):
+    def __init__(self, user_settings=None, defaults=None,
+                 import_strings=None, namespace=None):
         """
         Initialize the settings.
 
@@ -31,10 +33,10 @@ class MultiFactorSettings(APISettings):
         :param defaults: The default settings to use
         :type defaults: dict | None
 
-        :param import_strings: The names of the settings that need to be imported
+        :param import_strings: The names of the importable settings
         :type import_strings: iterable of str | None
 
-        :param namespace: The settings namespace or the name of the 'root' of the settings
+        :param namespace: The namespace of the settings or "CUSTOM"
         :type namespace: str | None
         """
         APISettings.__init__(self, user_settings, defaults, import_strings)
@@ -53,7 +55,7 @@ class MultiFactorSettings(APISettings):
         :return: The user defined settings
         :rtype dict
         """
-        if not hasattr(self, '_user_settings'):
+        if not hasattr(self, "_user_settings"):
             self._user_settings = getattr(settings, self.namespace, {})
         return self._user_settings
 
@@ -83,12 +85,16 @@ class MultiFactorSettings(APISettings):
         import_strings = import_strings or []
 
         duplicates = set(self.defaults.keys()) & set(defaults.keys())
-        if len(duplicates) != 0:
-            raise RuntimeError(f"Duplicate settings found: {', '.join(duplicates)}")  # pragma: no cover
+        if len(duplicates) != 0:  # pragma: no cover
+            raise RuntimeError(
+                f"Duplicate settings found: {', '.join(duplicates)}"
+            )
 
         not_existing = set(import_strings) - set(defaults.keys())
-        if len(not_existing) != 0:
-            raise RuntimeError(f"Non-existing import strings found: {', '.join(not_existing)}")  # pragma: no cover
+        if len(not_existing) != 0:  # pragma: no cover
+            raise RuntimeError(
+                f"Non-existing import strings found: {', '.join(not_existing)}"
+            )
 
         self.defaults.update(defaults)
         self.import_strings += import_strings

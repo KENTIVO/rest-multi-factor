@@ -20,7 +20,8 @@ class MultiFactorVerifierRouter(SimpleRouter):
 
     But it looks much cleaner and is use full for subclassing the view.
 
-    see: https://www.django-rest-framework.org/api-guide/routers/#custom-routers
+    see:
+    https://www.django-rest-framework.org/api-guide/routers/#custom-routers
     """
 
     routes = [

@@ -6,6 +6,7 @@ __all__ = (
 
 from rest_framework.serializers import ModelSerializer
 
+
 from rest_multi_factor.serializers import QRURIField
 from rest_multi_factor.plugins.totp.models import TOTPDevice
 
