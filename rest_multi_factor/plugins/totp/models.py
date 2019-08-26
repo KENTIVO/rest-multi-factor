@@ -10,10 +10,8 @@ import base64
 import binascii
 import urllib.parse
 
-
 from django.db.models.deletion import CASCADE
 from django.db.models.fields.related import ForeignKey
-
 
 from rest_multi_factor.fields import EncryptedField
 from rest_multi_factor.models import Device, Challenge
@@ -97,13 +95,13 @@ class TOTPChallenge(Challenge):
         :return: Whether this token is valid or not
         :rtype: bool
         """
-        if self.confirm:
+        if self.confirm:  # noqa: no cover
             raise RuntimeError("This challenge is already confirmed")
 
         try:
             token = int(token)
 
-        except (TypeError, ValueError):
+        except (TypeError, ValueError):  # noqa: no cover
             return False
 
         period = multi_factor_settings.TOTP_PERIOD

@@ -1,0 +1,7 @@
+django>=1.11
+djangorestframework>=3.9.4
+factory-boy>=2.12.0
+cryptography>=2.7
+
+# Dynamic tests not yet implemented
+# django-rest-knox>=4.1.0

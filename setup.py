@@ -23,7 +23,7 @@ def get_long_description():
 setup(
     name="rest-multi-factor",
 
-    version="1.0a0.dev2",
+    version="1.0a1",
     description="Multi factor for django rest framework",
 
     long_description=get_long_description(),
@@ -36,7 +36,7 @@ setup(
     author_email="joel.maatkamp@kentivo.com",
 
     # Not yet available
-    license="",
+    license="MIT",
 
     keywords="",
 
@@ -54,13 +54,13 @@ setup(
     },
 
     packages=find_packages(
-        exclude=["tests*", "docs"],
+        exclude=["tests*"],
     ),
 
 
     # See: https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 3 - Alpha",
 
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
@@ -75,5 +75,6 @@ setup(
         "Topic :: Internet :: WWW/HTTP",
 
         "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
     ]
 )
