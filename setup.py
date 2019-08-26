@@ -60,7 +60,7 @@ setup(
 
     # See: https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
 
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",

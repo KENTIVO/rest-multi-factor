@@ -17,7 +17,6 @@ r"""
 __title__ = "REST Multi Factor"
 __author__ = "Joël Maatkamp"
 __licence__ = "MIT"
-__version__ = __import__("django").get_version((1, 0, 0, "alpha", 2))
-
+__version__ = __import__("django").get_version((1, 0, 0, "beta", 0))
 
 default_app_config = "rest_multi_factor.apps.RestMultiFactorConfig"
