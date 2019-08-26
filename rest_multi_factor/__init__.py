@@ -13,11 +13,11 @@ r"""
  |_|  |_|\__,_|_|\__|_| |_|  \__,_|\___|\__\___/|_|
 """
 
+
 __title__ = "REST Multi Factor"
 __author__ = "Joël Maatkamp"
-__version__ = "1.0a2"
 __licence__ = "MIT"
+__version__ = __import__("django").get_version((1, 0, 0, "alpha", 2))
 
-VERSION = (1, 0, 0, "alpha", 2)
 
 default_app_config = "rest_multi_factor.apps.RestMultiFactorConfig"
