@@ -1,8 +1,6 @@
 """Container objects to maintain data before serialization."""
 
 __all__ = (
-    "RegisterContainer",
-
     "GeneralDeviceContainer",
     "SpecificDeviceContainer",
 )
@@ -21,9 +19,4 @@ SpecificDeviceContainer = namedtuple("SpecificDeviceContainer", (
     "confirmed",
     "verbose_name",
     "dispatchable",
-))
-
-RegisterContainer = namedtuple("RegisterContainer", (
-    "registered",
-    "verbose_name",
 ))

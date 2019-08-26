@@ -7,7 +7,6 @@ __all__ = (
 
 import itertools
 
-
 from rest_framework import status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
@@ -15,13 +14,13 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import NotFound
 from rest_framework.decorators import throttle_classes
 
-
 from rest_multi_factor.mixins import DeviceMixin
 from rest_multi_factor.registry import registry
 from rest_multi_factor.settings import multi_factor_settings
 from rest_multi_factor.throttling import AbstractDelayingThrottle
 from rest_multi_factor.serializers import DeviceSerializer, ValueSerializer
-from rest_multi_factor.permissions import IsTokenAuthenticated, IsVerified
+from rest_multi_factor.permissions import IsVerifiedOrNoDevice
+from rest_multi_factor.permissions import IsTokenAuthenticated
 
 
 class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
@@ -304,7 +303,7 @@ class MultiFactorRegistrationViewSet(DeviceMixin, ViewSet):
     lookup_field = "index"
     lookup_value_regex = r"\d+"
 
-    permission_classes = (IsVerified,)
+    permission_classes = (IsVerifiedOrNoDevice,)
 
     def register(self, request, **kwargs):
         """

@@ -19,7 +19,7 @@ class TOTPDeviceSerializer(ModelSerializer):
     if qrcode and pillow are available.
     """
 
-    class Meta:
+    class Meta:  # noqa:
         model = TOTPDevice
         fields = ("authenticator_url",)
 

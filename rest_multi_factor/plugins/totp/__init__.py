@@ -6,8 +6,6 @@ TOTP can also be integrated with Google authenticator.
 
 from rest_multi_factor.registry import registry
 from rest_multi_factor.settings import multi_factor_settings
-
-
 from rest_multi_factor.plugins.totp.settings import DEFAULTS, LOADABLE
 
 

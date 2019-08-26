@@ -71,7 +71,7 @@ class DefaultBackend(AbstractVerificationBackend):
         :type token: rest_framework.authtoken.Token | knox.model.AuthToken
 
         :param view: The current view
-        :type view: rest_framework.views.APIView
+        :type view: rest_framework.views.APIView | None
 
         :return: The number of verifications left
         :rtype: int

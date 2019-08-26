@@ -51,7 +51,7 @@ class QRURIField(Field):
 
         return base64.b64encode(buffer.read())
 
-    def to_internal_value(self, data):  # noqa: no cover
+    def to_internal_value(self, data):  # pragma: no cover
         """
         Ignored method, this field is read-only.
 

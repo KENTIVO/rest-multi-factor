@@ -59,7 +59,7 @@ class MultiFactorSettings(APISettings):
             self._user_settings = getattr(settings, self.namespace, {})
         return self._user_settings
 
-    def reload_settings(self, *_, setting=None, **__):
+    def reload_settings(self, *_, setting=None, **__): # pragma: no cover
         """
         Reload the settings when the settings file has changed.
 

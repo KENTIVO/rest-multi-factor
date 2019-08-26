@@ -7,10 +7,10 @@ or too early model imports.
 
 __all__ = (
     "registry",
+    "SerializerRegistry",
 )
 
 from importlib import import_module
-
 
 from django.apps import apps
 
@@ -33,7 +33,7 @@ class SerializerRegistry(object):
 
     def __getitem__(self, device):
         """Retrieve the serializer for a device."""
-        if not self.initialized:  # noqa: no cover
+        if not self.initialized:
             raise RuntimeError("The registry isn't initialized yet")
 
         return self._serializers[device]
@@ -45,12 +45,12 @@ class SerializerRegistry(object):
         This method will import all the registered devices and
         serializers and put them into a mapping.
         """
-        if self.initialized:  # noqa: no cover
+        if self.initialized:
             raise RuntimeError("The registry is already initialized")
 
         for specifier, serializer in self._prematurely.items():
             model = apps.get_model(specifier)
-            self._serializers[model] = self.get_serializer(model, serializer)
+            self._serializers[model] = self._get_serializer(model, serializer)
 
         self._initialized = True
 
@@ -67,18 +67,18 @@ class SerializerRegistry(object):
         :param serializer: The serializer specifier
         :type serializer: str
         """
-        if self.initialized:  # noqa: no cover
+        if self.initialized:
             raise RuntimeError("The registry is already initialized")
 
-        if specifier in self._prematurely.keys():  # noqa: no cover
-            if serializer is not self._prematurely[specifier]:
+        if specifier in self._prematurely.keys():
+            if serializer == self._prematurely[specifier]:
                 raise RuntimeError(f"Double register for {specifier}")
 
-            return
+            return  # pragma: no cover
 
         self._prematurely[specifier] = serializer
 
-    def get_serializer(self, model, serializer):
+    def _get_serializer(self, model, serializer):
         """
         Get a serializer from a app and serializer specifier.
 
@@ -94,7 +94,7 @@ class SerializerRegistry(object):
         app_lbl = getattr(model, "_meta").app_label
         package = apps.get_app_config(app_lbl).module
 
-        if "." in serializer:
+        if "." in serializer:  # pragma: no cover
             module, serializer = serializer.split(".", 1)
 
         else:

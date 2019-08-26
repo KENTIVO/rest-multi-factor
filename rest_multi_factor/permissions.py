@@ -9,6 +9,7 @@ __all__ = (
 from django import VERSION
 from django.db.models.query import Q
 
+
 from rest_framework.permissions import BasePermission
 
 
@@ -131,6 +132,6 @@ class IsVerifiedOrNoDevice(IsVerified):
 
         # ticket: https://code.djangoproject.com/ticket/28399
         if VERSION < (1, 11, 4):
-            return bool(len(queryset))
+            return bool(len(queryset))  # pragma: no cover
 
-        return bool(queryset.count())
+        return bool(queryset.count())   # pragma: no cover

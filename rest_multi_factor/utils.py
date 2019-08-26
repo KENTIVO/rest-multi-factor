@@ -105,7 +105,8 @@ def unify_queryset(base, fields=None, filter=None, queryset=None):
     models = get_subclassed_models(base)
 
     queryset = queryset or models[0].objects.none()
-    filtered = (m.objects.filter(filter).values(*fields) for m in models)
+    filtered = (m.objects.order_by() for m in models)
+    filtered = (q.filter(filter).values(*fields) for q in filtered)
 
     # ticket: https://code.djangoproject.com/ticket/28293
     if VERSION < (2, 0, 0) and isinstance(queryset, EmptyQuerySet):
