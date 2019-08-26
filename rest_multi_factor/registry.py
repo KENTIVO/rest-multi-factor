@@ -72,7 +72,7 @@ class SerializerRegistry(object):
 
         if specifier in self._prematurely.keys():
             if serializer == self._prematurely[specifier]:
-                raise RuntimeError(f"Double register for {specifier}")
+                raise RuntimeError("Double register for {0}".format(specifier))
 
             return  # pragma: no cover
 

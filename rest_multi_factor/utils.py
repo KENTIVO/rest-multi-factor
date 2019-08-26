@@ -39,9 +39,10 @@ def get_token_model():
 
     except LookupError:
         raise ImproperlyConfigured(
-            f"AUTH_TOKEN_MODEL refers to model "
-            f"'{multi_factor_settings.AUTH_TOKEN_MODEL}' "
-            f"that has not been installed"
+            "AUTH_TOKEN_MODEL refers to model '{AUTH_TOKEN_MODEL}' "
+            "that has not been installed".format(
+                AUTH_TOKEN_MODEL=multi_factor_settings.AUTH_TOKEN_MODEL
+            )
         )
 
 

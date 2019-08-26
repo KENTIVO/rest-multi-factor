@@ -99,7 +99,7 @@ class AbstractedThrottleBaseTests(APITestCase):
         instance = AbstractDelayingThrottleBase()
         identity = instance.get_ident(Request(request))
 
-        self.assertEqual(identity, quote(f"base {self.auth.token}"))
+        self.assertEqual(identity, quote("base {0}".format(self.auth.token)))
 
     def test_basic_authenticated_identity_generation(self):
         factory = APIRequestFactory()
@@ -175,6 +175,7 @@ class ThrottlingIntegrationTests(APITestCase):
         """
         timer.return_value = 0
 
+        factory = APIRequestFactory()
         factory = APIRequestFactory()
         request = factory.post("/")
 

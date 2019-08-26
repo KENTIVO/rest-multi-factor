@@ -34,10 +34,11 @@ class VerificationTests(APITestCase):
         """
         for i in (-2, -1, 0, 1, 2):
 
+            description = "TOTP not verified for `i={0}`".format(i)
             calculated = self.algorithm.calculate(self.device.secret, drift=i)
             confirmed = self.relate.verify(calculated, save=False)
 
-            self.assertTrue(confirmed, f"TOTP not verified for `i={i}`")
+            self.assertTrue(confirmed, description)
 
             self.relate.confirm = False
 
@@ -49,9 +50,10 @@ class VerificationTests(APITestCase):
         at the algorithm's tests.s
         """
         for i in (-4, -3, 3, 4):
+            description = "TOTP verified for `i={0}`".format(i)
             calculated = self.algorithm.calculate(self.device.secret, drift=i)
             confirmed = self.relate.verify(calculated, save=False)
 
-            self.assertFalse(confirmed, f"TOTP verified for `i={i}`")
+            self.assertFalse(confirmed, description)
 
             self.relate.confirm = False

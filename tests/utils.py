@@ -48,7 +48,7 @@ def token_auth_header(token):
     :return: The value for the Authorization header with token auth
     :rtype: str
     """
-    return f"Token {token}"
+    return "Token {token}".format(token=token)
 
 
 def basic_auth_header(username, password):
@@ -65,7 +65,7 @@ def basic_auth_header(username, password):
     :return: The value for the Authorization header with basic auth
     :rtype: str
     """
-    credentials = f"{username}:{password}".encode("iso-8859-1")
+    credentials = "{0}:{1}".format(username, password).encode("iso-8859-1")
     credentials = base64.b64encode(credentials).decode("iso-8859-1")
 
-    return f"basic {credentials}"
+    return "basic {credentials}".format(credentials=credentials)

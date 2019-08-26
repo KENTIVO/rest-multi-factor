@@ -23,7 +23,7 @@ def get_long_description():
 setup(
     name="rest-multi-factor",
 
-    version="1.0a1",
+    version="1.0a2",
     description="Multi factor for django rest framework",
 
     long_description=get_long_description(),

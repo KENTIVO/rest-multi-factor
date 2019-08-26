@@ -47,8 +47,9 @@ class AbstractVerificationBackend(metaclass=ABCMeta):
         verifications = multi_factor_settings.REQUIRED_VERIFICATIONS
 
         assert isinstance(verifications, int) and verifications > 0, (
-            f"'REQUIRED_VERIFICATIONS' MUST be a non-zero positive integer not"
-            f" '{verifications}', you could also configure another backend.>"
+            "'REQUIRED_VERIFICATIONS' MUST be a non-zero positive integer not"
+            " '{0}', you could also configure another backend.>"
+            .format(verifications)
         )
 
         return verifications

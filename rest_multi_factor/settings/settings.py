@@ -59,7 +59,7 @@ class MultiFactorSettings(APISettings):
             self._user_settings = getattr(settings, self.namespace, {})
         return self._user_settings
 
-    def reload_settings(self, *_, setting=None, **__): # pragma: no cover
+    def reload_settings(self, *_, setting=None, **__):  # pragma: no cover
         """
         Reload the settings when the settings file has changed.
 
@@ -87,13 +87,15 @@ class MultiFactorSettings(APISettings):
         duplicates = set(self.defaults.keys()) & set(defaults.keys())
         if len(duplicates) != 0:  # pragma: no cover
             raise RuntimeError(
-                f"Duplicate settings found: {', '.join(duplicates)}"
+                "Duplicate settings found: {0}".format(', '.join(duplicates))
             )
 
         not_existing = set(import_strings) - set(defaults.keys())
         if len(not_existing) != 0:  # pragma: no cover
             raise RuntimeError(
-                f"Non-existing import strings found: {', '.join(not_existing)}"
+                "Non-existing import strings found: {0}".format(
+                    ', '.join(not_existing)
+                )
             )
 
         self.defaults.update(defaults)

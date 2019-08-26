@@ -152,7 +152,7 @@ class AbstractDelayingThrottle(BaseThrottle, metaclass=abc.ABCMeta):
                 "Authentication must be token based to use this throttle"
             )
 
-        return urllib.parse.quote(f"{cls.scope} {request.auth}")
+        return urllib.parse.quote("{0} {1}".format(cls.scope, request.auth))
 
     @classmethod
     def clear(cls, request):

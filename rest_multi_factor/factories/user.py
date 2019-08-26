@@ -16,8 +16,8 @@ class UserFactory(DjangoModelFactory):
 
     @lazy_attribute
     def username(self):
-        return f"{self.first_name}-{self.last_name}".lower()
+        return "{0}-{1}".format(self.first_name, self.last_name).lower()
 
     @lazy_attribute
     def email(self):
-        return f"{self.username}@example.com".lower()
+        return "{0}@example.com".format(self.username).lower()

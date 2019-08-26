@@ -186,8 +186,9 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
         :rtype: str
         """
         assert isinstance(self.field, str), (
-            f"'{self.__class__.__name__}' should either include "
-            f"attribute of type str, or override the `get_field()` method."
+            "'{name}' should either include attribute of type str, "
+            "or override the `get_field()` method."
+            "".format(name=self.__class__.__name__)
         )
 
         return self.field
@@ -200,9 +201,9 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
         :rtype: rest_multi_factor.backends.AbstractVerificationBackend
         """
         assert self.backend_class is not None, (
-            f"'{self.__class__.__name__}' should either include a "
-            f"`backend_class` attribute, or override the "
-            f"`get_backend()` method."
+            "'{0}' should either include a `backend_class` attribute, "
+            "or override the `get_backend()` method."
+            .format(self.__class__.__name__)
         )
 
         return self.backend_class()
@@ -238,9 +239,9 @@ class MultiFactorVerifierViewSet(DeviceMixin, ViewSet):
         (Eg. admins get full serialization, others get basic serialization)
         """
         assert self.serializer_class is not None, (
-            f"'{self.__class__.__name__}' should either include a "
-            f"`serializer_class` attribute, or override the "
-            f"`get_serializer_class()` method."
+            "'{0}' should either include a `serializer_class` attribute, "
+            "or override the `get_serializer_class()` method."
+            .format(self.__class__.__name__)
         )
 
         return self.serializer_class
