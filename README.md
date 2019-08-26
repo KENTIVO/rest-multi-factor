@@ -13,7 +13,7 @@ A package that allows for a flexible multi factor implementation.
 Install using github
 
 ```bash
-$ git clone <rest-multi-factor repo>
+$ git clone https://github.com/KENTIVO/rest-multi-factor
 $ cd rest-multi-factor
 $ python setup.py sdist
 $ pip install /dist/<the generated file here>

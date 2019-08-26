@@ -29,8 +29,7 @@ setup(
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
 
-    # Not yet available
-    url="",
+    url="https://github.com/KENTIVO/rest-multi-factor",
 
     author="Joël Maatkamp",
     author_email="joel.maatkamp@kentivo.com",
