@@ -86,12 +86,12 @@ class TOTPChallenge(Challenge):
     device = ForeignKey(TOTPDevice, on_delete=CASCADE, editable=False)
     dispatch = None
 
-    def verify(self, token, save=True):
+    def verify(self, value, save=True):
         """
         Validate a token to check if this challenge can be confirmed.
 
-        :param token: The TOTP token to verify
-        :type token: str | int
+        :param value: The TOTP token to verify
+        :type value: str | int
 
         :param save: Whether to save the result or not
         :type save: bool
@@ -103,7 +103,7 @@ class TOTPChallenge(Challenge):
             raise RuntimeError("This challenge is already confirmed")
 
         try:
-            token = int(token)
+            value = int(value)
 
         except (TypeError, ValueError):  # noqa: no cover
             return False
@@ -120,7 +120,7 @@ class TOTPChallenge(Challenge):
                 self.device.secret, period, 0, digits, offset, digest
             )
 
-            if tryout == token:
+            if tryout == value:
                 self.confirm = True
                 if save:
                     self.save()
