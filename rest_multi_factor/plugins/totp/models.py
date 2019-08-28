@@ -57,10 +57,14 @@ class TOTPDevice(Device):
         label = urllib.parse.quote(self.user.get_username())
 
         period = multi_factor_settings.TOTP_PERIOD
+        issuer = multi_factor_settings.TOTP_ISSUER
         digits = multi_factor_settings.TOTP_DIGITS
         digest = multi_factor_settings.TOTP_ALGORITHM()
 
+        issuer = urllib.parse.quote(issuer)
+
         params = urllib.parse.urlencode({
+            "issuer": issuer,
             "digits": digits,
             "period": period,
             "secret": base64.b32encode(self.secret),
