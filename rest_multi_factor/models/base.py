@@ -33,7 +33,7 @@ class Device(Model, metaclass=DeviceMeta):
         abstract = True
         ordering = ("id",)
 
-    user = OneToOneField(User, on_delete=CASCADE)
+    user = OneToOneField(User, on_delete=CASCADE, related_name="rest_multi_factor_device_user")
 
 
 class Challenge(Model, ChallengeMixin):
@@ -49,6 +49,6 @@ class Challenge(Model, ChallengeMixin):
         abstract = True
         unique_together = ("token", "device")
 
-    token = OneToOneField(Token, on_delete=CASCADE)
+    token = OneToOneField(Token, on_delete=CASCADE, related_name="rest_multi_factor_challenge_token")
 
     confirm = BooleanField(default=False)
